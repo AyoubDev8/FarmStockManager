@@ -1,0 +1,93 @@
+# FarmStockManager
+
+## Overview
+This document serves as an initial README file for the project, which is currently under development and scheduled for completion on January 25th. It is intended to give a brief overview of the project's purpose, current status, and future updates.
+
+## Current Status
+As of now, the project is in its first version and not yet complete. The current functionalities include:
+
+- Inventory and Product management
+- Purchase processing
+- Material transfer between Main store and other stores
+
+## Upcoming Features
+The final version will be released by January 25th and is expected to include additional features and enhancements such as:
+
+- Finalized UI/UX improvements
+- Comprehensive error handling and validations
+- Extended documentation and code comments
+- Performance optimizations
+- Dynamic Dashboard 
+...
+
+## Installation and Setup
+To set up this project, you will need Python and Django installed on your system. Follow the steps below:
+
+1. Clone the project repository: (No Github URL) You can simply drag and drop the folder to VS code 
+
+2. Navigate to the project directory: FarmStockmanager 
+
+3. Create a virtual environment:
+
+```
+python -m venv venv
+```
+
+4. Activate the virtual environment:
+- On Windows:
+```
+  venv\Scripts\activate
+```
+- On macOS and Linux:
+```
+  source venv/bin/activate
+```
+5. Run database migrations:
+
+```
+python manage.py migrate
+```
+
+7. Start the development server:
+
+```
+python manage.py runserver
+
+```
+
+
+Now, the server should be running, and you can access the application through your browser at `http://127.0.0.1:8000/`.
+
+## Usage
+After setting up the project, you can:
+
+- Navigate to `/inventory/add/` to add new inventory items.
+- Go to `/purchases/add/` to create new purchase entries.
+- Access `/transfers/add/` to transfer materials between stores.
+
+Each page provides a user-friendly interface to manage the respective entities.
+
+## License
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE) file for details.
+
+## Contact
+If you have any questions or feedback, please contact me at ayoubdjellaoui20@gmail.com
+
+---
+
+**Note to Professor:**
+
+Despite the challenging schedule and the responsibility of tackling this project solo, alongside preparing for the exams, I have managed to build the foundational features of the application. Although it is currently at its halfway mark, I am fully committed to adding the remaining functionalities, including employee, customer, and sales management, as well as integrating a dashboard with Chart.js for analytics.
+
+The authentication system is prepared with frontend pages for login, registration, and user management; the backend logic will be completed in the coming days. Other features like exporting tables to PDF format are also on the agenda.
+
+I am confident in my ability to deliver a comprehensive application by January 25th. Your understanding of the current status and recognition of the solo effort put into this project are greatly appreciated. Inchallah, with focused effort and determination, the final version will be ready for presentation.
+
+Thank you for your support and guidance throughout this journey.
+
+
+
+---
+
+This README is a work in progress and will be updated with more detailed information as development progresses. Please refer to this document for the latest updates about the project.
+

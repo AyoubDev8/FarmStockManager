@@ -1,0 +1,142 @@
+{% extends 'ui_components/base.html' %}
+
+{% block title %} Inventory List {% endblock title %}
+
+{% load static %}
+{% block content %}
+<div class="page-wrapper">
+    <div class="content">
+        <div class="page-header">
+            <div class="page-title">
+                <h4>Raw Material Inventory</h4>
+                <h6>Manage your raw materials</h6>
+            </div>
+            <div class="page-btn">
+                <a href="{% url 'add_inventory' %}" class="btn btn-added">
+                    <img src="{% static 'img/icons/plus.svg' %}" alt="img" class="me-1">Add New Raw Material
+                </a>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <div class="table-top">
+                    <div class="search-set">
+                        <div class="search-path">
+                            <a class="btn btn-filter" id="filter_search">
+                                <img src="{% static 'img/icons/filter.svg' %}" alt="img">
+                                <span><img src="{% static 'img/icons/closes.svg' %}" alt="img"></span>
+                            </a>
+                        </div>
+                        <div class="search-input">
+                            <a class="btn btn-searchset"><img src="{% static 'img/icons/search-white.svg' %}" alt="img"></a>
+                        </div>
+                    </div>
+                    <div class="wordset">
+                        <ul>
+                            <li>
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf">
+                                    <img src="{% static 'img/icons/pdf.svg' %}" alt="img">
+                                </a>
+                            </li>
+                            <li>
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel">
+                                    <img src="{% static 'img/icons/excel.svg' %}" alt="img">
+                                </a>
+                            </li>
+                            <li>
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="print">
+                                    <img src="{% static 'img/icons/printer.svg' %}" alt="img">
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table datanew">
+                        <thead>
+                            <tr>
+                                <th>Raw Material Name</th>
+                                <th>Category</th>
+                                <th>Supplier</th>
+                                <th>Purchase Price</th>
+                                <th>Quantity in Stock</th>
+                                <th>Store</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for raw_material in raw_materials %}
+                            <tr>
+                                <td>{{ raw_material.designation }}</td>
+                                <td>{{ raw_material.category.name }}</td>
+                                <td>{{ raw_material.supplier.name }}</td>
+                                <td>${{ raw_material.purchase_price }}</td>
+                                <td>{{ raw_material.rawmaterialinventory_set.first.quantity_in_stock }}</td>
+                                <td>{{ raw_material.rawmaterialinventory_set.first.center }}</td>
+                                <td>
+                                    <a class="me-3" href="{% url 'edit_inventory' raw_material.code %}">
+                                        <img src="{% static 'img/icons/edit.svg' %}" alt="Edit">
+                                    </a>
+                                    <a href="#" class="confirm-text" data-bs-toggle="modal" data-bs-target="#deleteModal" data-raw-material-code="{{ raw_material.code }}" data-raw-material-name="{{ raw_material.designation }}">
+                                        <img src="{% static 'img/icons/delete.svg' %}" alt="Delete">
+                                    </a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="6">No raw materials found</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal for Raw Material -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
+          <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body text-center">
+          Are you sure you want to delete "<span id="rawMaterialName"></span>"?
+        </div>
+        <div class="modal-footer justify-content-center">
+          <form method="post" action="{% url 'delete_inventory' 0 %}" id="deleteForm" class="d-inline-block">
+            {% csrf_token %}
+            <input type="hidden" name="raw_material_code" id="rawMaterialCode">
+            <button type="submit" class="btn btn-danger">Delete</button>
+          </form>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        </div>
+      </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // When the delete link is clicked, show the modal with the raw material info
+    document.querySelectorAll('.confirm-text').forEach(function(element) {
+        element.addEventListener('click', function() {
+            var rawMaterialCode = this.getAttribute('data-raw-material-code');
+            var rawMaterialName = this.getAttribute('data-raw-material-name');
+            document.getElementById('rawMaterialName').textContent = rawMaterialName;
+            // Update the URL pattern name here
+            document.getElementById('deleteForm').action = '{% url "delete_inventory" 0 %}'.replace('/0/', '/' + rawMaterialCode + '/');
+        });
+    });
+</script>
+{% endblock %}
+
+    

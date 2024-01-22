@@ -1,0 +1,65 @@
+{% extends 'ui_components/base.html' %}
+
+{% block title %}Add Material Transfer{% endblock title %}
+{% load static %}
+
+{% block content %}
+<div class="page-wrapper">
+    <div class="content">
+        <div class="page-header">
+            <div class="page-title">
+                <h4>Add Material Transfer</h4>
+                <h6>Create a new material transfer entry</h6>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form.non_field_errors }}
+                    
+                    <div class="row">
+                        <div class="col-lg-4 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label for="id_center">Center</label>
+                                {{ form.center }}
+                                {{ form.center.errors }}
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label for="id_raw_material">Raw Material</label>
+                                {{ form.raw_material }}
+                                {{ form.raw_material.errors }}
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label for="id_quantity_transferred">Quantity Transferred</label>
+                                {{ form.quantity_transferred }}
+                                {{ form.quantity_transferred.errors }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-4 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label for="id_status">Status</label>
+                                {{ form.status }}
+                                {{ form.status.errors }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <a href="{% url 'transfer_list' %}" class="btn btn-secondary">Cancel</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
