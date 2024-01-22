@@ -1,0 +1,142 @@
+﻿{% extends 'ui_components/base.html' %}
+
+{% block title %} Supplier List {% endblock title %}
+
+{% load static %}
+{% block content %}
+<div class="page-wrapper">
+    <div class="content">
+        <div class="page-header">
+            <div class="page-title">
+                <h4>Supplier List</h4>
+                <h6>Manage your suppliers</h6>
+            </div>
+            <div class="page-btn">
+                <a href="{% url 'add_supplier' %}" class="btn btn-added">
+                    <img src="{% static 'img/icons/plus.svg' %}" alt="img">Add New Supplier
+                </a>
+            </div>
+        </div>
+
+        <!-- Search and Filter Options -->
+        <div class="card" id="filter_inputs">
+            <div class="card-body pb-0">
+                <div class="row">
+                    <div class="col-lg-2 col-sm-6 col-12">
+                        <div class="form-group">
+                            <input type="text" placeholder="Enter Supplier Code">
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-sm-6 col-12">
+                        <div class="form-group">
+                            <input type="text" placeholder="Enter Supplier">
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-sm-6 col-12">
+                        <div class="form-group">
+                            <input type="text" placeholder="Enter Phone">
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-sm-6 col-12">
+                        <div class="form-group">
+                            <input type="text" placeholder="Enter Email">
+                        </div>
+                    </div>
+                    <div class="col-lg-1 col-sm-6 col-12 ms-auto">
+                        <div class="form-group">
+                            <a class="btn btn-filters ms-auto">
+                                <img src="{% static 'img/icons/search-whites.svg' %}" alt="img">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Supplier Table -->
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table datanew">
+                        <thead>
+                            <tr>
+                                <th>Supplier Name</th>
+                                <th>Code</th>
+                                <th>Phone</th>
+                                <th>Email</th>
+                                <th>Address</th>
+                                <th>Balance</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for supplier in suppliers %}
+                            <tr>
+                                <td>{{ supplier.name }}</td>
+                                <td>{{ supplier.code }}</td>
+                                <td>{{ supplier.phone_number }}</td>
+                                <td>{{ supplier.email }}</td>
+                                <td>{{ supplier.address }}</td>
+                                <td>${{ supplier.balance }}</td>
+                                <td>
+                                    <a class="me-3" href="{% url 'edit_supplier' supplier.code %}">
+                                        <img src="{% static 'img/icons/edit.svg' %}" alt="Edit">
+                                    </a>
+                                    <a href="#" class="confirm-text" data-bs-toggle="modal" data-bs-target="#deleteModal" data-supplier-code="{{ supplier.code }}" data-supplier-name="{{ supplier.name }}">
+                                        <img src="{% static 'img/icons/delete.svg' %}" alt="Delete">
+                                    </a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="7">No suppliers found</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-center">
+                Are you sure you want to delete "<span id="supplierName"></span>"?
+            </div>
+            <div class="modal-footer justify-content-center">
+                <form method="post" action="{% url 'delete_supplier' 0 %}" id="deleteForm" class="d-inline-block">
+                    {% csrf_token %}
+                    <input type="hidden" name="supplier_code" id="supplierCode">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Modal script for delete confirmation
+    document.querySelectorAll('.confirm-text').forEach(function(element) {
+        element.addEventListener('click', function() {
+            var supplierCode = this.getAttribute('data-supplier-code');
+            var supplierName = this.getAttribute('data-supplier-name');
+            document.getElementById('supplierName').textContent = supplierName;
+            document.getElementById('deleteForm').action = '{% url "delete_supplier" 0 %}'.replace('/0/', '/' + supplierCode + '/');
+        });
+    });
+</script>
+{% endblock %}

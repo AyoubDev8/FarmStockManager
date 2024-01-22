@@ -1,0 +1,112 @@
+{% extends 'ui_components/base.html' %}
+
+{% block title %}Purchase List{% endblock title %}
+{% load static %}
+
+{% block content %}
+<div class="page-wrapper">
+    <div class="content">
+        <div class="page-header">
+            <div class="page-title">
+                <h4>Purchase List</h4>
+                <h6>Manage your purchases</h6>
+            </div>
+            <div class="page-btn">
+                <a href="{% url 'add_purchase' %}" class="btn btn-added">
+                    <img src="{% static 'img/icons/plus.svg' %}" alt="img">Add New Purchase
+                </a>
+            </div>
+        </div>
+
+        <!-- Table of Purchases -->
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table datanew">
+                        <thead>
+                            <tr>
+                                <th>Purchase ID</th>
+                                <th>Supplier</th>
+                                <th>Raw Material</th>
+                                <th>Quantity</th>
+                                <th>Unit Price</th>
+                                <th>Total Amount</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for purchase in purchases %}
+                            <tr>
+                                <td>{{ purchase.purchase_code }}</td>
+                                <td>{{ purchase.supplier.name }}</td>
+                                <td>{{ purchase.raw_material.designation }}</td>
+                                <td>{{ purchase.quantity }}</td>
+                                <td>${{ purchase.unit_price }}</td>
+                                <td>${{ purchase.total_amount }}</td>
+                                <td>{{ purchase.get_status_display }}</td>
+                                <!-- In your template file -->
+                                <td>
+                                    <a class="me-3" href="{% url 'edit_purchase' purchase.purchase_code %}">
+                                        <img src="{% static 'img/icons/edit.svg' %}" alt="Edit">
+                                    </a>
+                                    <a href="#" class="confirm-text" data-bs-toggle="modal" data-bs-target="#deleteModal" data-purchase-code="{{ purchase.purchase_code }}">
+                                        <img src="{% static 'img/icons/delete.svg' %}" alt="Delete">
+                                    </a>
+                                </td>
+
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="8">No purchases found</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal for Purchases -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-center">
+                Are you sure you want to delete the purchase "<span id="purchaseCode"></span>"?
+            </div>
+            <div class="modal-footer justify-content-center">
+                <form method="post" action="{% url 'delete_purchase' '0' %}" id="deleteForm" class="d-inline-block">
+                    {% csrf_token %}
+                    <!-- Note that we're using purchase_code here -->
+                    <input type="hidden" name="purchase_code" id="purchaseCodeInput">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Modal script for delete confirmation of a purchase
+    document.querySelectorAll('.confirm-text').forEach(function(element) {
+        element.addEventListener('click', function() {
+            var purchaseCode = this.getAttribute('data-purchase-code');
+            document.getElementById('purchaseCode').textContent = purchaseCode;
+            document.getElementById('purchaseCodeInput').value = purchaseCode;
+            document.getElementById('deleteForm').action = 
+                '{% url "delete_purchase" "0" %}'.replace('/0/', '/' + purchaseCode + '/');
+        });
+    });
+</script>
+{% endblock %}

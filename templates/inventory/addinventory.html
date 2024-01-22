@@ -1,0 +1,79 @@
+{% extends 'ui_components/base.html' %}
+
+{% block title %}Add Raw Material{% endblock title %}
+{% load static %}
+
+{% block content %}
+<div class="page-wrapper">
+    <div class="content">
+        <div class="page-header">
+            <div class="page-title">
+                <h4>Raw Material Add</h4>
+                <h6>Add new raw material</h6>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ raw_material_form.non_field_errors }}
+                    
+                    <div class="row">
+                        <div class="col-lg-4 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label for="id_designation">Designation</label>
+                                {{ raw_material_form.designation }}
+                                {{ raw_material_form.designation.errors }}
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label for="id_purchase_price">Purchase Price</label>
+                                {{ raw_material_form.purchase_price }}
+                                {{ raw_material_form.purchase_price.errors }}
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label for="id_center">Center</label>
+                                {{ raw_material_form.center }}
+                                {{ raw_material_form.center.errors }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-4 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label for="id_supplier">Supplier</label>
+                                {{ raw_material_form.supplier }}
+                                {{ raw_material_form.supplier.errors }}
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label for="id_category">Category</label>
+                                {{ raw_material_form.category }}
+                                {{ raw_material_form.category.errors }}
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label for="id_quantity_in_stock">Quantity in Stock</label>
+                                {{ raw_material_form.quantity_in_stock }}
+                                {{ raw_material_form.quantity_in_stock.errors }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <button type="submit" class="btn btn-submit me-2">Submit</button>
+                            <a href="{% url 'inventory_list' %}" class="btn btn-cancel">Cancel</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
